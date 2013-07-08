@@ -3,18 +3,18 @@
 > Generate CSS sprite sheets and the corresponding stylesheet
 
 ## Getting Started
-This plugin requires Grunt `~0.4.1`
+This plugin requires Grunt 0.4 or later.
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
 ```shell
-npm install montage --save-dev
+npm install grunt-montage --save-dev
 ```
 
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('montage');
+grunt.loadNpmTasks("grunt-montage");
 ```
 
 ## The "montage" task
@@ -24,66 +24,80 @@ In your project's Gruntfile, add a section named `montage` to the data object pa
 
 ```js
 grunt.initConfig({
-  montage: {
-    options: {
-      // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
-  },
-})
+    montage: {
+        targetName: {
+            // Target-specific montage configuration
+        }
+    }
+});
 ```
 
 ### Options
 
-#### options.separator
+#### options.size
+Type: `Number`
+Default value: `16`
+
+The width/height of each image included in the sprite sheet.
+
+#### options.prefix
 Type: `String`
-Default value: `',  '`
+Default value: `".montage"`
 
-A string value that is used to do something with whatever.
+A CSS selector to prefix all sprite classes with.
 
-#### options.punctuation
+#### options.outputImage
 Type: `String`
-Default value: `'.'`
+Default value: `"montage.png"`
 
-A string value that is used to do something else with whatever else.
+The name of the generated sprite sheet image.
+
+#### options.outputStylesheet
+Type: `String`
+Default value: `"montage.css"`
+
+The name of the generated stylesheet.
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+In this example, the default options are used to do generate a sprite sheet from 16x16 pixel versions of all the `.png` files in the `images/icons` directory. The sprite sheet will be created at `assets/sprites/montage.css` and the image at `assets/sprites/montage.png`, based on the default option values listed above.
 
 ```js
 grunt.initConfig({
-  montage: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
+    montage: {
+        simple: {
+            files: {
+                "assets/sprites": [
+                    "images/icons/*.png"
+                ]
+            }
+        }
+    }
+});
 ```
 
 #### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+In this example, custom options are used to configure the output. It will generate a sprite sheet of 32x32 pixel images at `assets/sprites/sprites.png` and the corresponding stylesheet at `assets/sprites/styles.css`.
 
 ```js
 grunt.initConfig({
-  montage: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
+    montage: {
+        simple: {
+            files: {
+                "assets/sprites": [
+                    "images/icons/*.png"
+                ]
+            },
+            options: {
+                size: 32,
+                outputImage: "sprites.png",
+                outputStylesheet: "styles.css"
+            }
+        }
+    }
+});
 ```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-## Release History
-_(Nothing yet)_
