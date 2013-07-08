@@ -37,7 +37,8 @@ module.exports = function (grunt) {
                         "test/fixtures/*.png"
                     ]
                 },
-                size: 16
+                size: 16,
+                prefix: ".montage"
             }
         },
 

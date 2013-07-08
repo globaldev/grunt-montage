@@ -10,7 +10,8 @@ module.exports = function (grunt) {
 
         // It's an async task so make sure Grunt knows this
         var done = this.async(),
-            size = this.data.size;
+            size = this.data.size,
+            prefix = this.data.prefix;
 
         // Iterate over all specified file groups.
         this.files.forEach(function (files) {
@@ -27,7 +28,7 @@ module.exports = function (grunt) {
                 sqrt = Math.sqrt(src.length),
                 rows = Math.floor(sqrt),
                 cols = Math.ceil(sqrt),
-                css = ".montage { background: url('montage.png') no-repeat; width: " + size + "px; height: " + size + "px; }\n";
+                css = prefix + " { background: url('montage.png') no-repeat; width: " + size + "px; height: " + size + "px; }\n";
 
             // Create the output directory if necessary (ImageMagick errors if it doesn't exist)
             if (!grunt.file.exists(files.dest)) {
@@ -39,7 +40,7 @@ module.exports = function (grunt) {
                 var offsetLeft = -size * (i % cols),
                     offsetTop = -size * Math.floor(i / cols),
                     className = path.basename(image).replace(/\.\w+$/, "");
-                return ".montage." + className + " { background-position: " + offsetLeft + "px " + offsetTop + "px; }\n";
+                return prefix + "." + className + " { background-position: " + offsetLeft + "px " + offsetTop + "px; }\n";
             }).join("");
 
             grunt.file.write(path.join(files.dest, "montage.css"), css);
