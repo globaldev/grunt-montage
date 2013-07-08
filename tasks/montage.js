@@ -4,7 +4,8 @@ module.exports = function (grunt) {
 
     var exec = require("child_process").exec,
         path = require("path"),
-        mkdirp = require("mkdirp");
+        mkdirp = require("mkdirp"),
+        rSpecial = /([!"#$%&'()*+,-.\/:;<=>?@[\]\\^`{}|~])/g;
 
     grunt.registerMultiTask("montage", "Generate CSS sprite sheets and the corresponding stylesheet", function () {
 
@@ -42,7 +43,7 @@ module.exports = function (grunt) {
             css += src.map(function (image, i) {
                 var offsetLeft = -size * (i % cols),
                     offsetTop = -size * Math.floor(i / cols),
-                    className = path.basename(image).replace(/\.\w+$/, "");
+                    className = path.basename(image).replace(/\.\w+$/, "").replace(rSpecial, "\\$1");
 
                 // Only add the units if the value is not 0
                 if (offsetLeft) {

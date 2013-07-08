@@ -1,7 +1,7 @@
 {
     "name": "grunt-montage",
     "description": "Generate CSS sprite sheets and the corresponding stylesheet",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": {
         "name": "James Allardice",
         "email": "jallardice@globalpersonals.co.uk"
