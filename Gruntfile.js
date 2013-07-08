@@ -39,7 +39,9 @@ module.exports = function (grunt) {
                 },
                 options: {
                     size: 16,
-                    prefix: ".montage"
+                    prefix: ".montage",
+                    outputImage: "montage.png",
+                    outputStylesheet: "montage.css"
                 }
             }
         },

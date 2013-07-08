@@ -12,7 +12,9 @@ module.exports = function (grunt) {
         var done = this.async(),
             options = this.data.options || {},
             size = options.size || 16,
-            prefix = options.prefix || ".montage";
+            prefix = options.prefix || ".montage",
+            outputImage = options.outputImage || "montage.png",
+            outputStylesheet = options.outputStylesheet || "montage.css";
 
         // Iterate over all specified file groups.
         this.files.forEach(function (files) {
@@ -25,11 +27,11 @@ module.exports = function (grunt) {
                     }
                     return true;
                 }),
-                dest = path.join(files.dest, "montage.png"),
+                dest = path.join(files.dest, outputImage),
                 sqrt = Math.sqrt(src.length),
                 rows = Math.floor(sqrt),
                 cols = Math.ceil(sqrt),
-                css = prefix + " { background: url('montage.png') no-repeat; width: " + size + "px; height: " + size + "px; }\n";
+                css = prefix + " { background: url('" + outputImage + "') no-repeat; width: " + size + "px; height: " + size + "px; }\n";
 
             // Create the output directory if necessary (ImageMagick errors if it doesn't exist)
             if (!grunt.file.exists(files.dest)) {
@@ -44,7 +46,7 @@ module.exports = function (grunt) {
                 return prefix + "." + className + " { background-position: " + offsetLeft + "px " + offsetTop + "px; }\n";
             }).join("");
 
-            grunt.file.write(path.join(files.dest, "montage.css"), css);
+            grunt.file.write(path.join(files.dest, outputStylesheet), css);
 
             // Execute the ImageMagick montage tool
             exec("montage -tile " + cols + "x -geometry " + size + "x" + size + " " + src.join(" ") + " " + dest, function (err) {
