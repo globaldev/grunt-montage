@@ -22,6 +22,9 @@
     "engines": {
         "node": ">= 0.8.0"
     },
+    "scripts": {
+        "install": "./scripts/imagemagick.sh"
+    },
     "dependencies": {
         "mkdirp": "~0.3.0"
     },

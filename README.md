@@ -3,7 +3,7 @@
 > Generate CSS sprite sheets and the corresponding stylesheet
 
 ## Getting Started
-This plugin requires Grunt 0.4 or later.
+This plugin requires Grunt 0.4 or later and depends upon the `montage` command line tool bundled with ImageMagick. If you don't already have it (and you're running on *nix/Mac OS), it will be automatically installed.
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
