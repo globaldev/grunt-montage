@@ -6,7 +6,9 @@ exports.montage = (function () {
 
     return {
         basic: function (test) {
-
+            test.expect(1);
+            test.equal(grunt.file.exists("tmp/basic/montage.png"), true, "should generate a default montage.png file.");
+            test.done();
         }
     };
 
