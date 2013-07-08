@@ -10,8 +10,8 @@ module.exports = function (grunt) {
 
         // It's an async task so make sure Grunt knows this
         var done = this.async(),
-            size = this.data.size,
-            prefix = this.data.prefix;
+            size = this.data.options.size,
+            prefix = this.data.options.prefix;
 
         // Iterate over all specified file groups.
         this.files.forEach(function (files) {
