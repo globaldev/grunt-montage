@@ -9,7 +9,8 @@ module.exports = function (grunt) {
     grunt.registerMultiTask("montage", "Generate CSS sprite sheets and the corresponding stylesheet", function () {
 
         // It's an async task so make sure Grunt knows this
-        var done = this.async();
+        var done = this.async(),
+            size = this.data.size;
 
         // Iterate over all specified file groups.
         this.files.forEach(function (files) {
@@ -22,15 +23,29 @@ module.exports = function (grunt) {
                     }
                     return true;
                 }),
-                dest = path.join(files.dest, "montage.png");
+                dest = path.join(files.dest, "montage.png"),
+                sqrt = Math.sqrt(src.length),
+                rows = Math.floor(sqrt),
+                cols = Math.ceil(sqrt),
+                css = ".montage { background: url('montage.png') no-repeat; width: " + size + "px; height: " + size + "px; }\n";
 
             // Create the output directory if necessary (ImageMagick errors if it doesn't exist)
             if (!grunt.file.exists(files.dest)) {
                 mkdirp(files.dest);
             }
 
+            // Generate a stylesheet
+            css += src.map(function (image, i) {
+                var offsetLeft = -size * (i % cols),
+                    offsetTop = -size * Math.floor(i / cols),
+                    className = path.basename(image).replace(/\.\w+$/, "");
+                return ".montage." + className + " { background-position: " + offsetLeft + "px " + offsetTop + "px; }\n";
+            }).join("");
+
+            grunt.file.write(path.join(files.dest, "montage.css"), css);
+
             // Execute the ImageMagick montage tool
-            exec("montage " + src.join(" ") + " " + dest, function (err) {
+            exec("montage -tile " + cols + "x -geometry " + size + "x" + size + " " + src.join(" ") + " " + dest, function (err) {
                 done();
             });
         });
