@@ -43,7 +43,16 @@ module.exports = function (grunt) {
                 var offsetLeft = -size * (i % cols),
                     offsetTop = -size * Math.floor(i / cols),
                     className = path.basename(image).replace(/\.\w+$/, "");
-                return prefix + "." + className + " { background-position: " + offsetLeft + "px " + offsetTop + "px; }\n";
+
+                // Only add the units if the value is not 0
+                if (offsetLeft) {
+                    offsetLeft += "px";
+                }
+                if (offsetTop) {
+                    offsetTop += "px";
+                }
+
+                return prefix + "." + className + " { background-position: " + offsetLeft + " " + offsetTop + "; }\n";
             }).join("");
 
             grunt.file.write(path.join(files.dest, outputStylesheet), css);
