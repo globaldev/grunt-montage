@@ -58,6 +58,12 @@ Default value: `"montage.css"`
 
 The name of the generated stylesheet.
 
+#### options.magick
+Type: `Object`
+Default value: `undefined`
+
+A map of [command-line options for the ImageMagick montage tool](http://www.imagemagick.org/script/montage.php).
+
 ### Usage Examples
 
 #### Default Options
@@ -93,6 +99,30 @@ grunt.initConfig({
                 size: 32,
                 outputImage: "sprites.png",
                 outputStylesheet: "styles.css"
+            }
+        }
+    }
+});
+```
+
+In this example, custom options are used to pass extra configuration through to ImageMagick. It will generate the same sprite sheet as the previous example, but with a transparent background.
+
+```js
+grunt.initConfig({
+    montage: {
+        simple: {
+            files: {
+                "assets/sprites": [
+                    "images/icons/*.png"
+                ]
+            },
+            options: {
+                size: 32,
+                outputImage: "sprites.png",
+                outputStylesheet: "styles.css",
+                magick: {
+                    background: "none"
+                }
             }
         }
     }

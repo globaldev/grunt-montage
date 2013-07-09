@@ -15,7 +15,16 @@ module.exports = function (grunt) {
             size = options.size || 16,
             prefix = options.prefix || ".montage",
             outputImage = options.outputImage || "montage.png",
-            outputStylesheet = options.outputStylesheet || "montage.css";
+            outputStylesheet = options.outputStylesheet || "montage.css",
+            cliOptions = "";
+
+        // Build ImageMagick montage option string
+        options.magick = options.magick || {};
+        cliOptions = Object.keys(options.magick).map(function (option) {
+            return "-" + option + " " + options.magick[option];
+        }).join(" ");
+
+        console.log(cliOptions);
 
         // Iterate over all specified file groups.
         this.files.forEach(function (files) {
@@ -59,7 +68,7 @@ module.exports = function (grunt) {
             grunt.file.write(path.join(files.dest, outputStylesheet), css);
 
             // Execute the ImageMagick montage tool
-            exec("montage -tile " + cols + "x -geometry " + size + "x" + size + " " + src.join(" ") + " " + dest, function (err) {
+            exec("montage -tile " + cols + "x -geometry " + size + "x" + size + " " + cliOptions + " " + src.join(" ") + " " + dest, function (err) {
                 done();
             });
         });
