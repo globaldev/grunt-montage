@@ -24,8 +24,6 @@ module.exports = function (grunt) {
             return "-" + option + " " + options.magick[option];
         }).join(" ");
 
-        console.log(cliOptions);
-
         // Iterate over all specified file groups.
         this.files.forEach(function (files) {
 
