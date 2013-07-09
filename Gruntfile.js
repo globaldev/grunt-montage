@@ -31,6 +31,13 @@ module.exports = function (grunt) {
 
         // Configuration to be run (and then tested).
         montage: {
+            defaults: {
+                files: {
+                    "tmp/defaults": [
+                        "test/fixtures/*.png"
+                    ]
+                }
+            },
             basic: {
                 files: {
                     "tmp/basic": [
@@ -38,10 +45,10 @@ module.exports = function (grunt) {
                     ]
                 },
                 options: {
-                    size: 16,
-                    prefix: ".montage",
-                    outputImage: "montage.png",
-                    outputStylesheet: "montage.css"
+                    size: 24,
+                    prefix: ".test",
+                    outputImage: "test.png",
+                    outputStylesheet: "test.css"
                 }
             }
         },

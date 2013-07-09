@@ -11,15 +11,26 @@ module.exports = function (grunt) {
 
         // It's an async task so make sure Grunt knows this
         var done = this.async(),
-            options = this.data.options || {},
-            size = options.size || 16,
-            prefix = options.prefix || ".montage",
-            outputImage = options.outputImage || "montage.png",
-            outputStylesheet = options.outputStylesheet || "montage.css",
-            cliOptions = "";
+            cliOptions = "",
+            options = {},
+            defaults = {
+                size: 16,
+                prefix: ".montage",
+                outputImage: "montage.png",
+                outputStylesheet: "montage.css",
+                magick: {}
+            };
+
+        // Configuration
+        Object.keys(defaults).forEach(function (option) {
+            if (this.data.options && this.data.options[option] !== undefined) {
+                options[option] = this.data.options[option];
+            } else {
+                options[option] = defaults[option];
+            }
+        }, this);
 
         // Build ImageMagick montage option string
-        options.magick = options.magick || {};
         cliOptions = Object.keys(options.magick).map(function (option) {
             return "-" + option + " " + options.magick[option];
         }).join(" ");
@@ -35,11 +46,11 @@ module.exports = function (grunt) {
                     }
                     return true;
                 }),
-                dest = path.join(files.dest, outputImage),
+                dest = path.join(files.dest, options.outputImage),
                 sqrt = Math.sqrt(src.length),
                 rows = Math.floor(sqrt),
                 cols = Math.ceil(sqrt),
-                css = prefix + " { background: url('" + outputImage + "') no-repeat; width: " + size + "px; height: " + size + "px; }\n";
+                css = options.prefix + " { background: url('" + options.outputImage + "') no-repeat; width: " + options.size + "px; height: " + options.size + "px; }\n";
 
             // Create the output directory if necessary (ImageMagick errors if it doesn't exist)
             if (!grunt.file.exists(files.dest)) {
@@ -48,8 +59,8 @@ module.exports = function (grunt) {
 
             // Generate a stylesheet
             css += src.map(function (image, i) {
-                var offsetLeft = -size * (i % cols),
-                    offsetTop = -size * Math.floor(i / cols),
+                var offsetLeft = -options.size * (i % cols),
+                    offsetTop = -options.size * Math.floor(i / cols),
                     className = path.basename(image).replace(/\.\w+$/, "").replace(rSpecial, "\\$1");
 
                 // Only add the units if the value is not 0
@@ -60,13 +71,13 @@ module.exports = function (grunt) {
                     offsetTop += "px";
                 }
 
-                return prefix + "." + className + " { background-position: " + offsetLeft + " " + offsetTop + "; }\n";
+                return options.prefix + "." + className + " { background-position: " + offsetLeft + " " + offsetTop + "; }\n";
             }).join("");
 
-            grunt.file.write(path.join(files.dest, outputStylesheet), css);
+            grunt.file.write(path.join(files.dest, options.outputStylesheet), css);
 
             // Execute the ImageMagick montage tool
-            exec("montage -tile " + cols + "x -geometry " + size + "x" + size + " " + cliOptions + " " + src.join(" ") + " " + dest, function (err) {
+            exec("montage -tile " + cols + "x -geometry " + options.size + "x" + options.size + " " + cliOptions + " " + src.join(" ") + " " + dest, function (err) {
                 done();
             });
         });
