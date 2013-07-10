@@ -58,6 +58,12 @@ Default value: `"montage.css"`
 
 The name of the generated stylesheet.
 
+#### options.baseRules
+Type: `Object`
+Default value: `undefined`
+
+A map of CSS properties/values that will be appended to the base rule in the stylesheet.
+
 #### options.magick
 Type: `Object`
 Default value: `undefined`
@@ -122,6 +128,28 @@ grunt.initConfig({
                 outputStylesheet: "styles.css",
                 magick: {
                     background: "none"
+                }
+            }
+        }
+    }
+});
+```
+
+In this example, custom options are used to add to the base CSS rule in the generated stylesheet. It will add `display` and `text-indent` properties to the base rule.
+
+```js
+grunt.initConfig({
+    montage: {
+        simple: {
+            files: {
+                "assets/sprites": [
+                    "images/icons/*.png"
+                ]
+            },
+            options: {
+                baseRules: {
+                    display: "inline-block",
+                    "text-indent": "-9999px"
                 }
             }
         }
