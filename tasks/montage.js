@@ -7,6 +7,13 @@ module.exports = function (grunt) {
         mkdirp = require("mkdirp"),
         rSpecial = /([!"#$%&'()*+,-.\/:;<=>?@[\]\\^`{}|~])/g;
 
+    // Build a CSS rule in the format 'selector { property: value; [... property: value;] }'
+    function buildRule(selector, properties) {
+        return selector + " { " + Object.keys(properties).map(function (property) {
+            return property + ": " + properties[property] + ";";
+        }).join(" ") + " }\n";
+    }
+
     grunt.registerMultiTask("montage", "Generate CSS sprite sheets and the corresponding stylesheet", function () {
 
         // It's an async task so make sure Grunt knows this
@@ -18,6 +25,7 @@ module.exports = function (grunt) {
                 prefix: ".montage",
                 outputImage: "montage.png",
                 outputStylesheet: "montage.css",
+                baseRules: {},
                 magick: {}
             };
 
@@ -29,6 +37,11 @@ module.exports = function (grunt) {
                 options[option] = defaults[option];
             }
         }, this);
+
+        // Add necessary style rules to the base CSS
+        options.baseRules.background = "url('" + options.outputImage + "') no-repeat";
+        options.baseRules.width = options.size + "px";
+        options.baseRules.height = options.size + "px";
 
         // Build ImageMagick montage option string
         cliOptions = Object.keys(options.magick).map(function (option) {
@@ -50,7 +63,7 @@ module.exports = function (grunt) {
                 sqrt = Math.sqrt(src.length),
                 rows = Math.floor(sqrt),
                 cols = Math.ceil(sqrt),
-                css = options.prefix + " { background: url('" + options.outputImage + "') no-repeat; width: " + options.size + "px; height: " + options.size + "px; }\n";
+                css = buildRule(options.prefix, options.baseRules);
 
             // Create the output directory if necessary (ImageMagick errors if it doesn't exist)
             if (!grunt.file.exists(files.dest)) {
@@ -59,19 +72,12 @@ module.exports = function (grunt) {
 
             // Generate a stylesheet
             css += src.map(function (image, i) {
-                var offsetLeft = -options.size * (i % cols),
-                    offsetTop = -options.size * Math.floor(i / cols),
+                var offsetLeft = (-options.size * (i % cols)) + "px",
+                    offsetTop = (-options.size * Math.floor(i / cols)) + "px",
                     className = path.basename(image).replace(/\.\w+$/, "").replace(rSpecial, "\\$1");
-
-                // Only add the units if the value is not 0
-                if (offsetLeft) {
-                    offsetLeft += "px";
-                }
-                if (offsetTop) {
-                    offsetTop += "px";
-                }
-
-                return options.prefix + "." + className + " { background-position: " + offsetLeft + " " + offsetTop + "; }\n";
+                return buildRule(options.prefix + "." + className, {
+                    "background-position": offsetLeft + " " + offsetTop
+                });
             }).join("");
 
             grunt.file.write(path.join(files.dest, options.outputStylesheet), css);
