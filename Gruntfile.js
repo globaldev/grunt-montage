@@ -50,6 +50,22 @@ module.exports = function (grunt) {
                     outputImage: "test.png",
                     outputStylesheet: "test.css"
                 }
+            },
+            base: {
+                files: {
+                    "tmp/base": [
+                        "test/fixtures/*.png"
+                    ]
+                },
+                options: {
+                    prefix: ".base",
+                    outputImage: "base.png",
+                    outputStylesheet: "base.css",
+                    baseRules: {
+                        display: "inline-block",
+                        "text-indent": "-9999px"
+                    }
+                }
             }
         },
 
